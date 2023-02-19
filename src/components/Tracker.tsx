@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { useParams } from "react-router-dom";
 
 export function Tracker() {
   const { names } = useParams();
-  const nameList = useRef(names?.split(","));
+  const [nameList, setNameList] = useState(names?.split(","));
   const [currentTurn, setCurrentTurn] = useState(0);
   const [currentPhase, setCurrentPhase] = useState("Action");
   const [playerNameTurn, setPlayerNameTurn] = useState("");
@@ -13,7 +13,7 @@ export function Tracker() {
   );
 
   useEffect(() => {
-    let currentPlayerName: string = nameList.current![currentTurn];
+    let currentPlayerName: string = nameList![currentTurn];
     if (currentPlayerName[currentPlayerName.length - 1] === "s") {
       currentPlayerName = currentPlayerName.concat("' ");
     } else {
@@ -21,7 +21,7 @@ export function Tracker() {
     }
     currentPlayerName = currentPlayerName.concat("Turn");
     setPlayerNameTurn(currentPlayerName);
-  }, [currentTurn]);
+  }, [currentTurn, nameList]);
 
   useEffect(() => {
     switch (currentPhase) {
@@ -41,18 +41,13 @@ export function Tracker() {
     }
   }, [currentPhase]);
 
-  useEffect(() => {}, []);
+  const shiftFirstPlayer = useCallback(() => {
+    const newPlayerList = nameList!.slice(1);
+    newPlayerList.push(nameList![0]);
+    setNameList(newPlayerList)
+  }, [nameList])
 
-  function nextMove() {
-    if (currentTurn === nameList.current!.length - 1) {
-      setCurrentTurn(0);
-      updatePhase();
-    } else {
-      setCurrentTurn(currentTurn + 1);
-    }
-  }
-
-  function updatePhase() {
+  const updatePhase = useCallback(() => {
     switch (currentPhase) {
       case "Action":
         setCurrentPhase("Encounter");
@@ -62,23 +57,33 @@ export function Tracker() {
         break;
       default:
         setCurrentPhase("Action");
+        shiftFirstPlayer()
         break;
     }
-  }
+  }, [currentPhase, shiftFirstPlayer])
 
-  const handleKeyDown = (event: KeyboardEvent) => {
+  const nextMove = useCallback(() => {
+    if (currentTurn === nameList!.length - 1 || currentPhase === "Mythos") {
+      setCurrentTurn(0);
+      updatePhase();
+    } else {
+      setCurrentTurn(currentTurn + 1);
+    }
+  }, [currentPhase, currentTurn, nameList, updatePhase])
+
+  const handleKeyDown = useCallback((event: KeyboardEvent) => {
     if (event.key === "ArrowRight") {
       event.preventDefault();
       nextMove();
     }
-  };
+  }, [nextMove]);
 
   useEffect(() => {
     document.body.addEventListener("keydown", handleKeyDown);
     return () => {
       document.body.removeEventListener("keydown", handleKeyDown);
     };
-  }, [currentTurn]);
+  }, [currentTurn, currentPhase, handleKeyDown]);
 
   return (
     <div className="App">
@@ -87,7 +92,9 @@ export function Tracker() {
           {currentPhase} Phase&nbsp;&nbsp;
           <img src={iconLink} className="small-logo" alt="logo" />
         </h1>
-        <p style={{ marginTop: "-1em" }}>{playerNameTurn}</p>
+        {currentPhase !== "Mythos" && (
+          <p style={{ marginTop: "-1em" }}>{playerNameTurn}</p>
+        )}
         <button type="button" onClick={nextMove}>
           Next Move
         </button>

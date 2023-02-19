@@ -43,10 +43,6 @@ button:hover {
 button:focus {
   outline: none;
 }
-button:disabled {
-  background-color: #666;
-  cursor: not-allowed;
-}
 
 input {
   background-color: #f2f2f2;
@@ -59,7 +55,7 @@ input {
 }
 
 input:focus {
-  outline: none;
+  outline: 5px solid var(--primary);
 }
 
 .small-logo {
@@ -70,7 +66,7 @@ input:focus {
 
 @media (prefers-reduced-motion: no-preference) {
   .small-logo {
-    animation: small-logo-spin infinite 20s linear;
+    animation: small-logo-spin infinite 5s linear;
   }
 }
 
