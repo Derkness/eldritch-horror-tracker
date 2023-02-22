@@ -1,15 +1,22 @@
+import clsx from "clsx";
 import { useCallback, useEffect, useState } from "react";
 
 import { useParams } from "react-router-dom";
+import { GameClassType, Phase } from "../utils/types";
 
-export function Tracker() {
+interface TrackerProps {
+  gameClass: GameClassType;
+  phases: Phase[];
+}
+
+export function Tracker({ gameClass, phases }: TrackerProps) {
   const { names } = useParams();
   const [nameList, setNameList] = useState(names?.split(","));
   const [currentTurn, setCurrentTurn] = useState(0);
-  const [currentPhase, setCurrentPhase] = useState("Action");
+  const [currentPhaseId, setCurrentPhaseId] = useState(0);
   const [playerNameTurn, setPlayerNameTurn] = useState("");
   const [iconLink, setIconLink] = useState(
-    "https://health-infobase.canada.ca/img/workout.png"
+    getCurrentPhase().icon
   );
 
   useEffect(() => {
@@ -23,24 +30,6 @@ export function Tracker() {
     setPlayerNameTurn(currentPlayerName);
   }, [currentTurn, nameList]);
 
-  useEffect(() => {
-    switch (currentPhase) {
-      case "Action":
-        setIconLink("https://health-infobase.canada.ca/img/workout.png");
-        break;
-      case "Encounter":
-        setIconLink(
-          "https://icones.pro/wp-content/uploads/2021/05/symbole-d-avertissement-rose.png"
-        );
-        break;
-      case "Mythos":
-        setIconLink(
-          "https://icones.pro/wp-content/uploads/2021/05/icone-point-d-interrogation-question-rose.png"
-        );
-        break;
-    }
-  }, [currentPhase]);
-
   const shiftFirstPlayer = useCallback(() => {
     const newPlayerList = nameList!.slice(1);
     newPlayerList.push(nameList![0]);
@@ -48,28 +37,31 @@ export function Tracker() {
   }, [nameList])
 
   const updatePhase = useCallback(() => {
-    switch (currentPhase) {
-      case "Action":
-        setCurrentPhase("Encounter");
-        break;
-      case "Encounter":
-        setCurrentPhase("Mythos");
-        break;
-      default:
-        setCurrentPhase("Action");
-        shiftFirstPlayer()
-        break;
+    const newPhaseId = currentPhaseId+1;
+    if (newPhaseId == phases.length) {
+      setCurrentPhaseId(0);
+      shiftFirstPlayer();
+    } else {
+      setCurrentPhaseId(newPhaseId);
     }
-  }, [currentPhase, shiftFirstPlayer])
+  }, [currentPhaseId, shiftFirstPlayer])
+
+  useEffect(() => {
+    setIconLink(getCurrentPhase().icon)
+  }, [currentPhaseId])
+
+  function getCurrentPhase() {
+    return phases[currentPhaseId];
+  }
 
   const nextMove = useCallback(() => {
-    if (currentTurn === nameList!.length - 1 || currentPhase === "Mythos") {
+    if (currentTurn === nameList!.length - 1 || !getCurrentPhase().all) {
       setCurrentTurn(0);
       updatePhase();
     } else {
       setCurrentTurn(currentTurn + 1);
     }
-  }, [currentPhase, currentTurn, nameList, updatePhase])
+  }, [currentPhaseId, currentTurn, nameList, updatePhase])
 
   const handleKeyDown = useCallback((event: KeyboardEvent) => {
     if (event.key === "ArrowRight") {
@@ -83,19 +75,19 @@ export function Tracker() {
     return () => {
       document.body.removeEventListener("keydown", handleKeyDown);
     };
-  }, [currentTurn, currentPhase, handleKeyDown]);
+  }, [currentTurn, currentPhaseId, handleKeyDown]);
 
   return (
     <div className="App">
       <header className="App-header">
         <h1 style={{ display: "flex", alignItems: "center" }}>
-          {currentPhase} Phase&nbsp;&nbsp;
-          <img src={iconLink} className="small-logo" alt="logo" />
+          {getCurrentPhase().name} Phase&nbsp;&nbsp;
+          <img src={iconLink} className={clsx("small-logo", gameClass)} alt="logo" />
         </h1>
-        {currentPhase !== "Mythos" && (
+        {getCurrentPhase().all && (
           <p style={{ marginTop: "-1em" }}>{playerNameTurn}</p>
         )}
-        <button type="button" onClick={nextMove}>
+        <button type="button" className={gameClass} onClick={nextMove}>
           Next Move
         </button>
       </header>

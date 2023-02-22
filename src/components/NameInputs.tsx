@@ -1,12 +1,19 @@
-import { getValue } from "@testing-library/user-event/dist/utils";
+import clsx from "clsx";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import "../index.css";
+import { GameClassType, GameName } from "../utils/types";
 
 interface FormInput {
   value: string;
 }
 
-export function NameInputs() {
+interface NameInputsProps {
+  gameClass: GameClassType;
+  gameName: GameName;
+}
+
+export function NameInputs({ gameClass, gameName }: NameInputsProps) {
   const [inputs, setInputs] = useState<FormInput[]>([{ value: "" }]);
 
   const handleInputChange = (
@@ -38,6 +45,7 @@ export function NameInputs() {
             <div key={index}>
               <input
                 type="text"
+                className={gameClass}
                 value={inputValue.value}
                 onChange={(event) => handleInputChange(index, event)}
                 autoFocus={index === inputs.length - 1}
@@ -45,15 +53,15 @@ export function NameInputs() {
               />
             </div>
           ))}
-          <button type="button" onClick={handleAddInput}>
+          <button type="button" className={gameClass} onClick={handleAddInput}>
             More
           </button>
           <br />
           <Link
-            to={`/tracker/${inputs
+            to={`/${gameName.replaceAll(" ","")}/tracker/${inputs
               .filter((a) => a.value != "")
               .map((a) => a.value)}`}
-            className="link"
+            className={clsx("link", gameClass)}
           >
             Play Time?
           </Link>

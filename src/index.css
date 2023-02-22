@@ -1,7 +1,11 @@
 :root {
   --background: #282c34;
-  --primary: #c98de7;
-  --primary-hover: #daa3f6;
+  --eh-primary: #c98de7;
+  --eh-primary-hover: #daa3f6;
+  --eh-primary-faded: #f2f2f2;
+  --dow-primary: #8dace7;
+  --dow-primary-hover: #a3bcf6;
+  --dow-primary-faded: #e9eefb;
 }
 
 body {
@@ -12,14 +16,25 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--background);
+  user-select: none;
 }
 
 .link {
-  color: var(--primary);
   transition: color 0.2s;
 }
-.link:hover {
-  color: var(--primary-hover)
+
+.link.eh{
+  color: var(--eh-primary);
+}
+.link:hover.eh {
+  color: var(--eh-primary-hover)
+}
+
+.link.dow{
+  color: var(--dow-primary);
+}
+.link:hover.dow {
+  color: var(--dow-primary-hover)
 }
 
 code {
@@ -27,8 +42,8 @@ code {
     monospace;
 }
 
+
 button {
-  background-color: var(--primary);
   border: none;
   border-radius: 5px;
   color: #fff;
@@ -38,14 +53,24 @@ button {
 }
 button:hover {
   cursor: pointer;
-  background-color: var(--primary-hover);
-}
-button:focus {
-  outline: none;
 }
 
+button.eh {
+  background-color: var(--eh-primary);
+}
+button:hover.eh {
+  background-color: var(--eh-primary-hover);
+}
+
+button.dow {
+  background-color: var(--dow-primary);
+}
+button:hover.dow {
+  background-color: var(--dow-primary-hover);
+}
+
+
 input {
-  background-color: #f2f2f2;
   border: none;
   border-radius: 5px;
   color: var(--background);
@@ -54,14 +79,31 @@ input {
   width: 100%;
 }
 
-input:focus {
-  outline: 5px solid var(--primary);
+input.eh {
+  background-color: var(--eh-primary-faded);
+}
+
+input:focus.eh {
+  outline: 5px solid var(--eh-primary);
+}
+
+input.dow {
+  background-color: var(--dow-primary-faded);
+}
+
+input:focus.dow {
+  outline: 5px solid var(--dow-primary);
 }
 
 .small-logo {
   height: 10vmin;
   pointer-events: none;
+}
+.small-logo.eh {
   filter: sepia(300%) hue-rotate(270deg) saturate(450%);
+}
+.small-logo.dow {
+  filter: sepia(300%) hue-rotate(170deg) saturate(450%);
 }
 
 @media (prefers-reduced-motion: no-preference) {
