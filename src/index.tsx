@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import App from "./App";
 import { GameHomePage, NameInputs, Tracker } from "./components";
+import { CustomGameSetup } from "./components/CustomGameSetup";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import { PHASES } from "./utils/constants";
@@ -38,6 +39,10 @@ root.render(
             <Route index element={<GameHomePage iconLink="https://cdn-icons-png.flaticon.com/512/1183/1183790.png" gameClass={GAME_CLASS.DEAD_OF_WINTER} gameName="Dead Of Winter"/>} />
             <Route path="nameSelect" element={<NameInputs gameClass={GAME_CLASS.DEAD_OF_WINTER} gameName="Dead Of Winter" />} />
             <Route path="tracker/:names" element={<Tracker gameClass={GAME_CLASS.DEAD_OF_WINTER} phases={PHASES.DEAD_OF_WINTER}/>} />
+          </Route>
+          <Route path="Custom">
+            <Route index element={<CustomGameSetup />} />
+            
           </Route>
         </Routes>
       </BrowserRouter>

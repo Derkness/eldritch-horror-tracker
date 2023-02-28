@@ -1,5 +1,10 @@
 :root {
   --background: #282c34;
+  --plain-primary: #daa520;
+  --plain-primary-hover: #dfb854;
+  --plain-primary-faded: #e3d5b1;
+
+
   --eh-primary: #c98de7;
   --eh-primary-hover: #daa3f6;
   --eh-primary-faded: #f2f2f2;
@@ -21,6 +26,13 @@ body {
 
 .link {
   transition: color 0.2s;
+}
+
+.link.plain{
+  color: var(--plain-primary);
+}
+.link:hover.plain {
+  color: var(--plain-primary-hover)
 }
 
 .link.eh{
@@ -55,6 +67,13 @@ button:hover {
   cursor: pointer;
 }
 
+button.plain {
+  background-color: var(--plain-primary);
+}
+button:hover.plain {
+  background-color: var(--plain-primary-hover);
+}
+
 button.eh {
   background-color: var(--eh-primary);
 }
@@ -79,10 +98,16 @@ input {
   width: 100%;
 }
 
+input.plain {
+  background-color: var(--plain-primary-faded);
+}
+input:focus.plain {
+  outline: 5px solid var(--plain-primary);
+}
+
 input.eh {
   background-color: var(--eh-primary-faded);
 }
-
 input:focus.eh {
   outline: 5px solid var(--eh-primary);
 }
@@ -90,7 +115,6 @@ input:focus.eh {
 input.dow {
   background-color: var(--dow-primary-faded);
 }
-
 input:focus.dow {
   outline: 5px solid var(--dow-primary);
 }
@@ -99,9 +123,11 @@ input:focus.dow {
   height: 10vmin;
   pointer-events: none;
 }
+
 .small-logo.eh {
   filter: sepia(300%) hue-rotate(270deg) saturate(450%);
 }
+
 .small-logo.dow {
   filter: sepia(300%) hue-rotate(170deg) saturate(450%);
 }
@@ -119,4 +145,25 @@ input:focus.dow {
   to {
     transform: rotate(360deg);
   }
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #333333;
+  color: #ffffff;
+}
+
+th, td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #ffffff;
+}
+
+th {
+  background-color: #444444;
+}
+
+tr:nth-child(even) {
+  background-color: #555555;
 }

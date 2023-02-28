@@ -28,8 +28,3 @@ export function GameHomePage({ iconLink, gameClass, gameName }: GameHomePageProp
     </div>
   );
 }
-
-// BASICALLY:
-// Keep the routes where they are, nested in index
-// Remove this 'router' and instead just have it be a home page with links
-// No need

@@ -14,6 +14,7 @@ function App() {
         <p>What game are we playing?</p>
         <Link to="/EldritchHorror" className="link eh">Eldritch Horror</Link>
         <Link to="/DeadOfWinter" className="link dow">Dead Of Winter</Link>
+        <Link to="/Custom" className="link plain">Don't see your game? Make your own!</Link>
       </header>
     </div>
   );

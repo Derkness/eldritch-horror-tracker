@@ -82,7 +82,7 @@ export function Tracker({ gameClass, phases }: TrackerProps) {
       <header className="App-header">
         <h1 style={{ display: "flex", alignItems: "center" }}>
           {getCurrentPhase().name} Phase&nbsp;&nbsp;
-          <img src={iconLink} className={clsx("small-logo", gameClass)} alt="logo" />
+          {iconLink && <img src={iconLink} className={clsx("small-logo", gameClass)} alt="logo" />}
         </h1>
         {getCurrentPhase().all && (
           <p style={{ marginTop: "-1em" }}>{playerNameTurn}</p>
